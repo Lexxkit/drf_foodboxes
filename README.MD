@@ -15,8 +15,8 @@ All requirements are listed in the file: `requirements.txt`.
 ## Populate DB with initial data
 
 Make and apply migrations for the project.
-Execute django command `python manage.py load_data` to populate DB with initial data.
-URL for initial data is hard-coded in the `load_data.py`.
+Execute django command `python manage.py get_initial_data` to populate DB with initial data.
+URL for initial data is hard-coded in the `get_initial_data.py`.
 
 ## Interact with API
 

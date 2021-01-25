@@ -8,8 +8,7 @@ class Item(models.Model):
     description = models.TextField()
     image = models.ImageField(upload_to=MEDIA_ITEMS_IMAGE_DIR, null=True)
     weight = models.IntegerField()
-    price = models.DecimalField(decimal_places=2, max_digits=11)
+    price = models.DecimalField(decimal_places=2, max_digits=8)
 
     def __str__(self):
         return self.title
-
