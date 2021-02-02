@@ -78,7 +78,7 @@ class Command(BaseCommand):
                     defaults={
                         'author': user,
                         'text': review['content'],
-                        'created_at': review['created_at '],
+                        'created_at': review['created_at'],
                         'published_at': review['published_at'] or None,
                         'status': review['status'],
                     }

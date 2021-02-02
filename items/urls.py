@@ -1,8 +1,7 @@
-from django.urls import path
+from rest_framework.routers import DefaultRouter
 
-from .views import item_detail
+from .views import ItemReadOnlyViewSet
 
-
-urlpatterns = [
-    path('<pk>', item_detail)
-]
+items_router = DefaultRouter()
+items_router.register(r'items', ItemReadOnlyViewSet, basename='item')
+urlpatterns = items_router.urls

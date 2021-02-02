@@ -1,20 +1,19 @@
-from rest_framework.decorators import api_view
-from rest_framework.generics import get_object_or_404
-from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import permissions
+from rest_framework.filters import OrderingFilter
+from rest_framework.viewsets import ReadOnlyModelViewSet
 
+from .filters import ItemFilter
 from .models import Item
+from .paginators import ItemPageNumberPagination
+from .serializers import ItemSerializer
 
 
-@api_view(http_method_names=['GET'])
-def item_detail(request, pk):
-    item = get_object_or_404(Item, id=pk)
-
-    response = {
-        'id': item.id,
-        'title': item.title,
-        'description': item.description,
-        'image': request.build_absolute_uri(item.image.url),
-        'weight': item.weight,
-        'price': str(item.price),
-    }
-    return Response(response)
+class ItemReadOnlyViewSet(ReadOnlyModelViewSet):
+    queryset = Item.objects.all()
+    serializer_class = ItemSerializer
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    filterset_class = ItemFilter
+    ordering_fields = ['price']
+    pagination_class = ItemPageNumberPagination
+    permission_classes = [permissions.AllowAny]
