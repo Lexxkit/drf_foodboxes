@@ -1,29 +1,27 @@
 from django.shortcuts import get_object_or_404
-from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.generics import RetrieveAPIView
 
 from .models import Cart, CartItem
 from .paginators import CartItemLimitOffsetPagination
 from .serializers import CartSerializer, CartItemSerializer
 
 
-class CartView(APIView):
+class CartView(RetrieveAPIView):
+    queryset = Cart.objects.all()
     authentication_classes = [TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
+    serializer_class = CartSerializer
 
-    @swagger_auto_schema(responses={200: CartSerializer(many=True)})
-    def get(self, request):
-        user = request.user
-        user_cart, _ = Cart.objects.get_or_create(
-            user=user,
+    def get_object(self):
+        # create cart for pre-populated mock users or get an existing one
+        obj, _ = Cart.objects.get_or_create(
+            user=self.request.user,
             defaults=None
         )
-        serializer = CartSerializer(user_cart)
-        return Response(serializer.data)
+        return obj
 
 
 class CartItemsViewSet(ModelViewSet):

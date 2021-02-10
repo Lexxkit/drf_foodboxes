@@ -32,8 +32,8 @@ schema_view = get_schema_view(
 )
 
 api_url = [
-    path('', include('items.urls')),
-    path('', include('carts.urls')),
+    path('items/', include('items.urls')),
+    path('carts/', include('carts.urls')),
     path('users/', include('users.urls')),
     path('docs/', schema_view.with_ui('swagger', cache_timeout=0)),  # noqa
 ]

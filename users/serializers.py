@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
+from carts.models import Cart
+
 UserModel = get_user_model()
 
 
@@ -18,29 +20,22 @@ class UserSerializer(serializers.ModelSerializer):
             'phone',
             'address'
         ]
+        read_only_fields = ['id']
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        user = UserModel.objects.create(
-            username=validated_data['username'],
-            email=validated_data['email'],
-            first_name=validated_data['first_name'],
-            last_name=validated_data['last_name'],
-            middle_name=validated_data['middle_name'],
-            phone_number=validated_data['phone'],
-            address=validated_data['address']
-        )
-        user.set_password(validated_data['password'])
+        user_password = validated_data.pop('password')
+        user = UserModel.objects.create(**validated_data)
+        user.set_password(user_password)
         user.save()
+        # create an empty cart for new user
+        Cart.objects.create(user=user)
 
         return user
 
     def update(self, instance, validated_data):
-        instance.email = validated_data.get('email', instance.email)
-        instance.first_name = validated_data.get('first_name', instance.first_name)
-        instance.last_name = validated_data.get('last_name', instance.last_name)
-        instance.middle_name = validated_data.get('middle_name', instance.middle_name)
-        instance.phone_number = validated_data.get('phone', instance.phone_number)
-        instance.address = validated_data.get('address', instance.address)
+        instance = super().update(instance, validated_data)
+        instance.set_password(validated_data['password'])
         instance.save()
+
         return instance
