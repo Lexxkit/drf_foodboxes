@@ -1,0 +1,19 @@
+[run]
+include =
+    items/*,
+    reviews/*,
+    carts/*,
+    orders/*,
+    users/*
+command_line = manage.py test
+
+[report]
+omit =
+    *apps.py,
+    *filters.py,
+    *paginators.py,
+    *migrations/*,
+    *settings.py,
+    *urls.py,
+    *wsgi.py,
+	manage.py

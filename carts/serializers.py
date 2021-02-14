@@ -22,7 +22,8 @@ class CartItemSerializer(serializers.ModelSerializer):
         depth = 1
 
     def create(self, validated_data):
-        user_cart = Cart.objects.get(user=self.context['request'].user)
+        current_user = self.context['request'].user
+        user_cart = Cart.objects.filter(user=current_user).exclude(orders__recipient=current_user).first()
         # check if item is already in the users cart
         if user_cart.items.filter(title=validated_data['item']):
             # if YES, then only increase QUANTITY in users cart
