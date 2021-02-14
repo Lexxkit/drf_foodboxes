@@ -32,9 +32,11 @@ schema_view = get_schema_view(
 )
 
 api_url = [
-    path('items/', include('items.urls')),
-    path('carts/', include('carts.urls')),
+    path('items/', include(('items.urls', 'items'), namespace='items')),
+    path('carts/', include(('carts.urls', 'carts'), namespace='carts')),
     path('users/', include('users.urls')),
+    path('orders/', include('orders.urls')),
+    path('reviews/', include(('reviews.urls', 'reviews'), namespace='reviews')),
     path('docs/', schema_view.with_ui('swagger', cache_timeout=0)),  # noqa
 ]
 
